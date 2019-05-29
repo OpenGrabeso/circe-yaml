@@ -31,4 +31,30 @@ class NumberTests extends FlatSpec with Matchers {
     val output = printer.pretty(json)
     assert(!(output contains "!!"))
   }
+
+  "Json Parser" should "parse JSON doubles as doubles" in {
+    val input =
+      """
+        |{
+        |  "x1": "0.1",
+        |  "x2": "0.20000000298023224",
+        |  "x3": "0.12345678901234567"
+        |}
+      """.stripMargin
+    import io.circe.parser._
+    val json = decode[Json](input).right.get
+    val output = printer.pretty(json)
+    assert(!(output contains "!!"))
+  }
+
+  "Encoder" should "encode doubles as doubles" in {
+    case class XY(x: Double, y: Double)
+
+    val xy = XY(1.0/3, 1.0/7)
+    import io.circe.syntax._
+    import io.circe.generic.auto._
+    val json = xy.asJson
+    val output = printer.pretty(json)
+    assert(!(output contains "!!"))
+  }
 }

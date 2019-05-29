@@ -51,6 +51,8 @@ val root = project.in(file("."))
     libraryDependencies ++= Seq(
       "io.circe" %% "circe-core" % Versions.circe,
       "io.circe" %% "circe-jawn" % Versions.circe % Test,
+      "io.circe" %% "circe-parser" % Versions.circe % Test,
+      "io.circe" %% "circe-generic" % Versions.circe % Test,
       "org.yaml" % "snakeyaml" % Versions.snakeYaml,
       "io.circe" %% "circe-testing" % Versions.circe % Test,
       "org.typelevel" %% "discipline" % Versions.discipline % Test,
