@@ -29,25 +29,11 @@ class NumberTests extends FlatSpec with Matchers {
       "double0ppp" -> fromDoubleOrNull(0.000000000000000000000000000000001234568)
     )
     val output = printer.pretty(json)
-    assert(!(output contains "!!"))
+    assert(!(output contains "!!")) // no type tags expected in the output
+    assert(!(output contains "e-")) // scientific notation not expected in the output
   }
 
-  "Json Parser" should "parse JSON doubles as doubles" in {
-    val input =
-      """
-        |{
-        |  "x1": "0.1",
-        |  "x2": "0.20000000298023224",
-        |  "x3": "0.12345678901234567"
-        |}
-      """.stripMargin
-    import io.circe.parser._
-    val json = decode[Json](input).right.get
-    val output = printer.pretty(json)
-    assert(!(output contains "!!"))
-  }
-
-  "Encoder" should "encode doubles as doubles" in {
+  it should "encode doubles as doubles" in {
     case class XY(x: Double, y: Double)
 
     val xy = XY(1.0/3, 1.0/7)
@@ -55,6 +41,20 @@ class NumberTests extends FlatSpec with Matchers {
     import io.circe.generic.auto._
     val json = xy.asJson
     val output = printer.pretty(json)
-    assert(!(output contains "!!"))
+    assert(!(output contains "!!")) // no type tags expected in the output
+    assert(!(output contains "e-")) // scientific notation not expected in the output
+  }
+
+  "Parser" should "parse doubles as doubles" in {
+    val input =
+      """
+        |---
+        |x: 0.12345678901234567
+      """.stripMargin
+    import io.circe.yaml.parser._
+    val json = parse(input).right.get
+    val output = printer.pretty(json)
+    assert(!(output contains "!!")) // no type tags expected in the output
+    assert(!(output contains "e-")) // scientific notation not expected in the output
   }
 }
